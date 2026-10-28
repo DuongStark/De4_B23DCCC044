@@ -1,5 +1,12 @@
 module.exports = {
   root: true,
   extends: '@react-native',
-  ignorePatterns: ['.kilo/', 'node_modules/', 'android/', 'ios/'],
+  ignorePatterns: [
+    '.kilo/',
+    'docs-local/',
+    '.superpowers/',
+    'node_modules/',
+    'android/',
+    'ios/',
+  ],
 };

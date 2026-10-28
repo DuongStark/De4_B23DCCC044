@@ -1,45 +1,46 @@
-import type { ImageSourcePropType } from 'react-native';
-import type { NavigatorScreenParams } from '@react-navigation/native';
-
-export type Contact = {
+export const CATEGORIES = [
+  'Khai vị',
+  'Món chính',
+  'Tráng miệng',
+  'Đồ uống',
+] as const;
+export type Category = (typeof CATEGORIES)[number];
+export type Dish = {
   id: string;
   name: string;
-  avatar: ImageSourcePropType;
-  online: boolean;
-  lastSeen: string;
+  category: Category;
+  price: number;
+  available: boolean;
 };
-
-export type Message = {
+export type InvoiceItem = { dishId: string; quantity: number };
+export type Invoice = {
   id: string;
-  text: string;
-  time: string;
-  mine: boolean;
+  tableNumber: number;
+  items: InvoiceItem[];
+  status: 'Đang phục vụ' | 'Đã thanh toán';
+  createdAt: string;
 };
-
-export type Conversation = {
-  contactId: string;
-  unread: number;
-  messages: Message[];
+export type RestaurantData = { dishes: Dish[]; invoices: Invoice[] };
+export type DishInput = { name: string; price: string; category: Category };
+export type DishErrors = { name?: string; price?: string };
+export type ActionResult = { ok: true } | { ok: false; error: string };
+export type InvoiceLine = {
+  dishId: string;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
 };
-
-export type ChatNotification = {
-  id: string;
-  contactId?: string;
-  title: string;
-  content: string;
-  time: string;
-  read: boolean;
+export type InvoiceDetails = {
+  lines: InvoiceLine[];
+  subtotal: number;
+  vat: number;
+  total: number;
 };
-
-export type TabParams = {
-  Home: undefined;
-  Contacts: undefined;
-  Notifications: undefined;
-  Settings: undefined;
-};
-
-export type RootStackParams = {
-  Login: undefined;
-  Main: NavigatorScreenParams<TabParams> | undefined;
-  Chat: { contactId: string };
+export type RootStackParamList = {
+  Menu: undefined;
+  DishForm: { dishId?: string };
+  Tables: undefined;
+  Order: { tableNumber: number };
+  Payment: { invoiceId: string };
 };
