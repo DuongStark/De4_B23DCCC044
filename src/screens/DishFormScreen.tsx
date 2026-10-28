@@ -26,6 +26,9 @@ import { validateDish } from '../utils/validation';
 import AppButton from '../components/AppButton';
 import EmptyState from '../components/EmptyState';
 
+// Mỗi hàng có 2 nút; flex: 1 giúp hai nút chia đều toàn bộ chiều ngang.
+const CATEGORY_ROWS = [CATEGORIES.slice(0, 2), CATEGORIES.slice(2)];
+
 type Props = NativeStackScreenProps<RootStackParamList, 'DishForm'> & {
   dishes: Dish[];
   onSave: (input: DishInput, id?: string) => ActionResult;
@@ -118,27 +121,31 @@ export default function DishFormScreen({
           <View style={styles.field}>
             <Text style={common.label}>Loại món</Text>
             <View style={styles.categories}>
-              {CATEGORIES.map(item => (
-                <Pressable
-                  key={item}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: category === item }}
-                  onPress={() => setCategory(item)}
-                  style={({ pressed }) => [
-                    styles.category,
-                    category === item && styles.selected,
-                    pressed && common.pressed,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.categoryText,
-                      category === item && styles.selectedText,
-                    ]}
-                  >
-                    {item}
-                  </Text>
-                </Pressable>
+              {CATEGORY_ROWS.map(row => (
+                <View key={row[0]} style={styles.categoryRow}>
+                  {row.map(item => (
+                    <Pressable
+                      key={item}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: category === item }}
+                      onPress={() => setCategory(item)}
+                      style={({ pressed }) => [
+                        styles.category,
+                        category === item && styles.selected,
+                        pressed && common.pressed,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.categoryText,
+                          category === item && styles.selectedText,
+                        ]}
+                      >
+                        {item}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </View>
               ))}
             </View>
           </View>
@@ -151,21 +158,24 @@ export default function DishFormScreen({
 const styles = StyleSheet.create({
   intro: { gap: 8, marginBottom: 8 },
   field: { gap: 8, marginBottom: 4 },
-  categories: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  categories: { gap: 10 },
+  categoryRow: { flexDirection: 'row', gap: 10 },
   category: {
-    paddingHorizontal: 16,
+    flex: 1,
+    minHeight: 54,
+    justifyContent: 'center',
+    paddingHorizontal: 12,
     paddingVertical: 14,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 12,
     backgroundColor: colors.surface,
-    minWidth: '44%',
     alignItems: 'center',
   },
   selected: {
     borderColor: colors.primary,
     backgroundColor: colors.primarySoft,
   },
-  categoryText: { fontSize: 16, color: colors.muted },
+  categoryText: { fontSize: 16, color: colors.muted, textAlign: 'center' },
   selectedText: { fontWeight: '700', color: colors.primary },
 });
